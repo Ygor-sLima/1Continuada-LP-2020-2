@@ -1,16 +1,80 @@
 package br.com.bandtec.projetoindividual;
 
+import java.util.concurrent.ThreadLocalRandom;
 /**
  *
  * @author Ritswy
  */
 public class App extends javax.swing.JFrame {
 
+    Recurso cpu = new Recurso();
+    Recurso memoria = new Recurso();
+    Recurso disco = new Recurso();
+    
+    void sortearValor(Recurso recurso) {
+        recurso.dado = ThreadLocalRandom.current()
+                .nextDouble(0, recurso.maximoPossivel);
+        recurso.porcentagem =(recurso.dado * 100) / recurso.maximoPossivel;
+        recurso.somaPorcentagem += recurso.porcentagem;
+        recurso.leituras++;
+        if(recurso.minimoPorcentagem > recurso.porcentagem) {
+            recurso.minimoPorcentagem = recurso.porcentagem;
+        }
+        if(recurso.maximoPorcentagem < recurso.porcentagem) {
+            recurso.maximoPorcentagem = recurso.porcentagem;
+        }
+    }
+    void atualizarTela() {
+        //Atualizando valroes de CPU
+        lblMainCPU.setText(String.format("%.2f/%.2f %s (%.2f %%)", cpu.dado,
+                cpu.maximoPossivel, cpu.medida, cpu.porcentagem));
+        pgBarCPU.setValue(cpu.porcentagem.intValue());
+        pgBarCPU.setString(String.format("%.2f %% usado",cpu.porcentagem));
+        lblUsoPercentCPU.setText(String.format("%.2f %%",cpu.porcentagem));
+        lblVelocidadeCPU.setText(String.format("%.2f%s",cpu.dado,cpu.medida));
+        lblMinimoCPU.setText(String.format("%.2f %%",cpu.minimoPorcentagem));
+        lblMaximoCPU.setText(String.format("%.2f %%",cpu.maximoPorcentagem));
+        lblMediaCPU.setText(String.format("%.2f %%",cpu.somaPorcentagem/cpu.leituras));
+        
+        //Atualizando valores de Disco
+        lblMainDisco.setText(String.format("Atividade %.2f %%", disco.porcentagem));
+        pgBarDisco.setValue(disco.porcentagem.intValue());
+        pgBarDisco.setString(String.format("%.2f %% usado",disco.porcentagem));
+        lblUsoDisco.setText(String.format("%.2f %%",disco.porcentagem));
+        lblTempoDisco.setText(String.format("%.2f%s",disco.dado,disco.medida));
+        lblMinimoDisco.setText(String.format("%.2f %%",disco.minimoPorcentagem));
+        lblMaximoDisco.setText(String.format("%.2f %%",disco.maximoPorcentagem));
+        lblMediaDisco.setText(String.format("%.2f %%",disco.somaPorcentagem/disco.leituras));
+        
+        //Atualizando valores de Memoria
+        lblMainMemoria.setText(String.format("%.2f/%.2f %s (%.2f %%)", memoria.dado,
+                memoria.maximoPossivel, memoria.medida, memoria.porcentagem));
+        pgBarMemoria.setValue(memoria.porcentagem.intValue());
+        pgBarMemoria.setString(String.format("%.2f %% usado",memoria.porcentagem));
+        lblUsoPercentMemoria.setText(String.format("%.2f %%",memoria.porcentagem));
+        lblUsoMemoria.setText(String.format("%.2f%s",memoria.dado,memoria.medida));
+        lblMinimoMemoria.setText(String.format("%.2f %%",memoria.minimoPorcentagem));
+        lblMaximoMemoria.setText(String.format("%.2f %%",memoria.maximoPorcentagem));
+        lblMediaMemoria.setText(String.format("%.2f %%",memoria.somaPorcentagem/memoria.leituras));
+    }
     /**
      * Creates new form App
      */
     public App() {
         initComponents();
+        cpu.medida = "GHz";
+        memoria.medida = "GB";
+        disco.medida = "ms";
+        cpu.maximoPossivel = 3.16;
+        memoria.maximoPossivel = 2.0;
+        //Como a porcentagem de atividade de um disco não é medida exatamente
+        //da maneira que to citando aqui, pois pode demorar mais que um tempo
+        //maximo, decidi usar dessa forma para manter de maneira didática
+        disco.maximoPossivel = 22.4;
+        sortearValor(cpu);
+        sortearValor(disco);
+        sortearValor(memoria);
+        atualizarTela();
     }
 
     /**
@@ -24,43 +88,48 @@ public class App extends javax.swing.JFrame {
 
         lblTitle = new javax.swing.JLabel();
         panelMemoria = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jProgressBar1 = new javax.swing.JProgressBar();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
+        lblTitleMemoria = new javax.swing.JLabel();
+        pgBarMemoria = new javax.swing.JProgressBar();
+        lblMainMemoria = new javax.swing.JLabel();
+        lblTextUsoPercentMemoria = new javax.swing.JLabel();
+        lblUsoPercentMemoria = new javax.swing.JLabel();
+        lblMinimoMemoria = new javax.swing.JLabel();
+        lblTextMinimoMemoria = new javax.swing.JLabel();
+        lblTextMaximoMemoria = new javax.swing.JLabel();
+        lblMaximoMemoria = new javax.swing.JLabel();
+        lblTextMediaMemoria = new javax.swing.JLabel();
+        lblMediaMemoria = new javax.swing.JLabel();
+        lblTextUsoMemoria = new javax.swing.JLabel();
+        lblUsoMemoria = new javax.swing.JLabel();
         panelCPU = new javax.swing.JPanel();
-        jLabel18 = new javax.swing.JLabel();
-        jProgressBar2 = new javax.swing.JProgressBar();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
-        jLabel25 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
-        jLabel27 = new javax.swing.JLabel();
-        jLabel28 = new javax.swing.JLabel();
-        jLabel29 = new javax.swing.JLabel();
+        lblTitleCPU = new javax.swing.JLabel();
+        pgBarCPU = new javax.swing.JProgressBar();
+        lblMainCPU = new javax.swing.JLabel();
+        lblTextUsoPercentCPU = new javax.swing.JLabel();
+        lblUsoPercentCPU = new javax.swing.JLabel();
+        lblMinimoCPU = new javax.swing.JLabel();
+        lblTextMinimoCPU = new javax.swing.JLabel();
+        lblTextMaximoCPU = new javax.swing.JLabel();
+        lblMaximoCPU = new javax.swing.JLabel();
+        lblTextMediaCPU = new javax.swing.JLabel();
+        lblMediaCPU = new javax.swing.JLabel();
+        lblTextVelocidadeCPU = new javax.swing.JLabel();
+        lblVelocidadeCPU = new javax.swing.JLabel();
         panelDisco = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jProgressBar3 = new javax.swing.JProgressBar();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel30 = new javax.swing.JLabel();
-        jLabel31 = new javax.swing.JLabel();
-        jLabel32 = new javax.swing.JLabel();
-        jLabel33 = new javax.swing.JLabel();
-        jLabel34 = new javax.swing.JLabel();
-        jLabel35 = new javax.swing.JLabel();
+        lblTitleDisco = new javax.swing.JLabel();
+        pgBarDisco = new javax.swing.JProgressBar();
+        lblMainDisco = new javax.swing.JLabel();
+        lblTextUsoDisco = new javax.swing.JLabel();
+        lblUsoDisco = new javax.swing.JLabel();
+        lblMinimoDisco = new javax.swing.JLabel();
+        lblTextMinimoDisco = new javax.swing.JLabel();
+        lblTextMaximoDisco = new javax.swing.JLabel();
+        lblMaximoDisco = new javax.swing.JLabel();
+        lblTextMediaDisco = new javax.swing.JLabel();
+        lblMediaDisco = new javax.swing.JLabel();
+        lblTextTempoDisco = new javax.swing.JLabel();
+        lblTempoDisco = new javax.swing.JLabel();
+        btnLeitura = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,41 +137,46 @@ public class App extends javax.swing.JFrame {
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTitle.setText("Monitoramento de Hardware");
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setText("Memória");
+        lblTitleMemoria.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        lblTitleMemoria.setText("Memória");
 
-        jProgressBar1.setBackground(new java.awt.Color(0, 0, 0));
-        jProgressBar1.setForeground(new java.awt.Color(255, 100, 255));
-        jProgressBar1.setValue(80);
-        jProgressBar1.setString("80% Usado");
-        jProgressBar1.setStringPainted(true);
+        pgBarMemoria.setBackground(new java.awt.Color(0, 0, 0));
+        pgBarMemoria.setForeground(new java.awt.Color(0, 0, 0));
+        pgBarMemoria.setString("00");
+        pgBarMemoria.setStringPainted(true);
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel4.setText("1.6/2.0 GB (80%)");
+        lblMainMemoria.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblMainMemoria.setText("00.00/00.00 aaa (000.00)%");
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel7.setText("Em uso:");
+        lblTextUsoPercentMemoria.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextUsoPercentMemoria.setText("Em uso(%)");
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel8.setText("1.6 GB");
+        lblUsoPercentMemoria.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblUsoPercentMemoria.setText("000.00 %");
 
-        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel12.setText("1.6 GB");
+        lblMinimoMemoria.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblMinimoMemoria.setText("000.00 %");
 
-        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel13.setText("Mínimo:");
+        lblTextMinimoMemoria.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextMinimoMemoria.setText("Mínimo:");
 
-        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel14.setText("Máximo:");
+        lblTextMaximoMemoria.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextMaximoMemoria.setText("Máximo:");
 
-        jLabel15.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel15.setText("1.6 GB");
+        lblMaximoMemoria.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblMaximoMemoria.setText("000.00 %");
 
-        jLabel16.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel16.setText("Média:");
+        lblTextMediaMemoria.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextMediaMemoria.setText("Média:");
 
-        jLabel17.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel17.setText("1.6 GB");
+        lblMediaMemoria.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblMediaMemoria.setText("000.00%");
+
+        lblTextUsoMemoria.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextUsoMemoria.setText("Em uso:");
+
+        lblUsoMemoria.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblUsoMemoria.setText("00.00 aaa");
 
         javax.swing.GroupLayout panelMemoriaLayout = new javax.swing.GroupLayout(panelMemoria);
         panelMemoria.setLayout(panelMemoriaLayout);
@@ -111,31 +185,37 @@ public class App extends javax.swing.JFrame {
             .addGroup(panelMemoriaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelMemoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pgBarMemoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelMemoriaLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(lblTitleMemoria)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel4))
+                        .addComponent(lblMainMemoria))
                     .addGroup(panelMemoriaLayout.createSequentialGroup()
                         .addGroup(panelMemoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTextUsoPercentMemoria)
                             .addGroup(panelMemoriaLayout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(jLabel8))
-                            .addComponent(jLabel7))
-                        .addGap(216, 216, 216)
+                                .addComponent(lblUsoPercentMemoria)))
+                        .addGap(18, 18, 18)
+                        .addGroup(panelMemoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTextUsoMemoria)
+                            .addGroup(panelMemoriaLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(lblUsoMemoria)))
+                        .addGap(126, 126, 126)
                         .addGroup(panelMemoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelMemoriaLayout.createSequentialGroup()
-                                .addComponent(jLabel13)
+                                .addComponent(lblTextMinimoMemoria)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel12))
+                                .addComponent(lblMinimoMemoria))
                             .addGroup(panelMemoriaLayout.createSequentialGroup()
-                                .addComponent(jLabel16)
+                                .addComponent(lblTextMediaMemoria)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel17))
+                                .addComponent(lblMediaMemoria))
                             .addGroup(panelMemoriaLayout.createSequentialGroup()
-                                .addComponent(jLabel14)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                                .addComponent(jLabel15)))))
+                                .addComponent(lblTextMaximoMemoria)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblMaximoMemoria)))))
                 .addContainerGap())
         );
         panelMemoriaLayout.setVerticalGroup(
@@ -143,68 +223,69 @@ public class App extends javax.swing.JFrame {
             .addGroup(panelMemoriaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelMemoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel4))
+                    .addComponent(lblTitleMemoria)
+                    .addComponent(lblMainMemoria))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelMemoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel13)
-                    .addComponent(jLabel12))
+                .addComponent(pgBarMemoria, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelMemoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel14)
-                    .addComponent(jLabel15)
-                    .addComponent(jLabel8))
+                    .addComponent(lblTextUsoPercentMemoria)
+                    .addComponent(lblTextMinimoMemoria)
+                    .addComponent(lblMinimoMemoria)
+                    .addComponent(lblTextUsoMemoria))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelMemoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel16)
-                    .addComponent(jLabel17))
+                    .addComponent(lblTextMaximoMemoria)
+                    .addComponent(lblMaximoMemoria)
+                    .addComponent(lblUsoPercentMemoria)
+                    .addComponent(lblUsoMemoria))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelMemoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTextMediaMemoria)
+                    .addComponent(lblMediaMemoria))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel18.setText("CPU");
+        lblTitleCPU.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        lblTitleCPU.setText("CPU");
 
-        jProgressBar2.setBackground(new java.awt.Color(0, 0, 0));
-        jProgressBar2.setForeground(new java.awt.Color(150, 150, 255));
-        jProgressBar2.setValue(80);
-        jProgressBar2.setString("80% Usado");
-        jProgressBar2.setStringPainted(true);
+        pgBarCPU.setBackground(new java.awt.Color(0, 0, 0));
+        pgBarCPU.setForeground(new java.awt.Color(0, 0, 0));
+        pgBarCPU.setString("000");
+        pgBarCPU.setStringPainted(true);
 
-        jLabel19.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel19.setText("2.22/3.16 GHz (100%)");
+        lblMainCPU.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblMainCPU.setText("00.00/00.00 aaa (000.00 %)");
 
-        jLabel20.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel20.setText("Utilização:");
+        lblTextUsoPercentCPU.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextUsoPercentCPU.setText("Utilização(%):");
 
-        jLabel21.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel21.setText("13%");
+        lblUsoPercentCPU.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblUsoPercentCPU.setText("000.00%");
 
-        jLabel22.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel22.setText("1.6 GB");
+        lblMinimoCPU.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblMinimoCPU.setText("000.00 %");
 
-        jLabel23.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel23.setText("Mínimo:");
+        lblTextMinimoCPU.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextMinimoCPU.setText("Mínimo:");
 
-        jLabel24.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel24.setText("Máximo:");
+        lblTextMaximoCPU.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextMaximoCPU.setText("Máximo:");
 
-        jLabel25.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel25.setText("1.6 GB");
+        lblMaximoCPU.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblMaximoCPU.setText("000.00%");
 
-        jLabel26.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel26.setText("Média:");
+        lblTextMediaCPU.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextMediaCPU.setText("Média:");
 
-        jLabel27.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel27.setText("1.6 GB");
+        lblMediaCPU.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblMediaCPU.setText("000.00%");
 
-        jLabel28.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel28.setText("Utilização:");
+        lblTextVelocidadeCPU.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextVelocidadeCPU.setText("Velocidade");
 
-        jLabel29.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel29.setText("2.15 GHz");
+        lblVelocidadeCPU.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblVelocidadeCPU.setText("00.00 aaa");
 
         javax.swing.GroupLayout panelCPULayout = new javax.swing.GroupLayout(panelCPU);
         panelCPU.setLayout(panelCPULayout);
@@ -213,40 +294,37 @@ public class App extends javax.swing.JFrame {
             .addGroup(panelCPULayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelCPULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pgBarCPU, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelCPULayout.createSequentialGroup()
-                        .addComponent(jLabel18)
+                        .addComponent(lblTitleCPU)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel19))
+                        .addComponent(lblMainCPU))
                     .addGroup(panelCPULayout.createSequentialGroup()
                         .addGroup(panelCPULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel20)
+                            .addComponent(lblTextUsoPercentCPU)
                             .addGroup(panelCPULayout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(jLabel21)))
+                                .addComponent(lblUsoPercentCPU)))
                         .addGap(18, 18, 18)
                         .addGroup(panelCPULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel28)
+                            .addComponent(lblTextVelocidadeCPU)
                             .addGroup(panelCPULayout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(jLabel29)))
+                                .addComponent(lblVelocidadeCPU)))
                         .addGap(160, 160, 160)
                         .addGroup(panelCPULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelCPULayout.createSequentialGroup()
-                                .addComponent(jLabel23)
+                                .addComponent(lblTextMinimoCPU)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel22))
+                                .addComponent(lblMinimoCPU))
                             .addGroup(panelCPULayout.createSequentialGroup()
-                                .addGroup(panelCPULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(panelCPULayout.createSequentialGroup()
-                                        .addComponent(jLabel24)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel25))
-                                    .addGroup(panelCPULayout.createSequentialGroup()
-                                        .addComponent(jLabel26)
-                                        .addGap(33, 33, 33)
-                                        .addComponent(jLabel27)))
-                                .addGap(0, 8, Short.MAX_VALUE)))))
+                                .addComponent(lblTextMediaCPU)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblMediaCPU))
+                            .addGroup(panelCPULayout.createSequentialGroup()
+                                .addComponent(lblTextMaximoCPU)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblMaximoCPU)))))
                 .addContainerGap())
         );
         panelCPULayout.setVerticalGroup(
@@ -254,70 +332,70 @@ public class App extends javax.swing.JFrame {
             .addGroup(panelCPULayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelCPULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel18)
-                    .addComponent(jLabel19))
+                    .addComponent(lblTitleCPU)
+                    .addComponent(lblMainCPU))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pgBarCPU, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelCPULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelCPULayout.createSequentialGroup()
                         .addGroup(panelCPULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel23)
-                            .addComponent(jLabel22))
+                            .addComponent(lblTextMinimoCPU)
+                            .addComponent(lblMinimoCPU))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelCPULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel24)
-                            .addComponent(jLabel25)))
+                            .addComponent(lblTextMaximoCPU)
+                            .addComponent(lblMaximoCPU)))
                     .addGroup(panelCPULayout.createSequentialGroup()
-                        .addComponent(jLabel20)
+                        .addComponent(lblTextUsoPercentCPU)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel21))
+                        .addComponent(lblUsoPercentCPU))
                     .addGroup(panelCPULayout.createSequentialGroup()
-                        .addComponent(jLabel28)
+                        .addComponent(lblTextVelocidadeCPU)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel29)))
+                        .addComponent(lblVelocidadeCPU)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelCPULayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel27)
-                    .addComponent(jLabel26))
+                    .addComponent(lblMediaCPU)
+                    .addComponent(lblTextMediaCPU))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel2.setText("Disco");
+        lblTitleDisco.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        lblTitleDisco.setText("Disco");
 
-        jProgressBar3.setBackground(new java.awt.Color(0, 0, 0));
-        jProgressBar3.setForeground(new java.awt.Color(150, 200, 150));
-        jProgressBar3.setValue(80);
-        jProgressBar3.setString("80% Usado");
-        jProgressBar3.setStringPainted(true);
+        pgBarDisco.setBackground(new java.awt.Color(0, 0, 0));
+        pgBarDisco.setForeground(new java.awt.Color(0, 0, 0));
+        pgBarDisco.setValue(80);
+        pgBarDisco.setString("80% Usado");
+        pgBarDisco.setStringPainted(true);
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel5.setText("Atividade 56%");
+        lblMainDisco.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel9.setText("Em uso:");
+        lblTextUsoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextUsoDisco.setText("Atividade:");
 
-        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel10.setText("1.6 GB");
+        lblUsoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        jLabel30.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel30.setText("68%");
+        lblMinimoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        jLabel31.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel31.setText("Mínimo:");
+        lblTextMinimoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextMinimoDisco.setText("Mínimo:");
 
-        jLabel32.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel32.setText("Máximo:");
+        lblTextMaximoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextMaximoDisco.setText("Máximo:");
 
-        jLabel33.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel33.setText("76%");
+        lblMaximoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        jLabel34.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel34.setText("Média:");
+        lblTextMediaDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextMediaDisco.setText("Média:");
 
-        jLabel35.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel35.setText("84%");
+        lblMediaDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        lblTextTempoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextTempoDisco.setText("Tempo de resposta");
+
+        lblTempoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         javax.swing.GroupLayout panelDiscoLayout = new javax.swing.GroupLayout(panelDisco);
         panelDisco.setLayout(panelDiscoLayout);
@@ -326,32 +404,38 @@ public class App extends javax.swing.JFrame {
             .addGroup(panelDiscoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jProgressBar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pgBarDisco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelDiscoLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addComponent(lblTitleDisco)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel5))
+                        .addComponent(lblMainDisco))
                     .addGroup(panelDiscoLayout.createSequentialGroup()
                         .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTextUsoDisco)
                             .addGroup(panelDiscoLayout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(jLabel10))
-                            .addComponent(jLabel9))
-                        .addGap(224, 762, Short.MAX_VALUE)
+                                .addComponent(lblUsoDisco)))
+                        .addGap(18, 18, 18)
+                        .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelDiscoLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(lblTempoDisco))
+                            .addComponent(lblTextTempoDisco))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDiscoLayout.createSequentialGroup()
-                                    .addComponent(jLabel34)
+                                    .addComponent(lblTextMediaDisco)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel35))
+                                    .addComponent(lblMediaDisco))
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDiscoLayout.createSequentialGroup()
-                                    .addComponent(jLabel32)
+                                    .addComponent(lblTextMaximoDisco)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel33)))
+                                    .addComponent(lblMaximoDisco)))
                             .addGroup(panelDiscoLayout.createSequentialGroup()
-                                .addComponent(jLabel31)
+                                .addComponent(lblTextMinimoDisco)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel30)))))
+                                .addComponent(lblMinimoDisco)))))
                 .addContainerGap())
         );
         panelDiscoLayout.setVerticalGroup(
@@ -359,26 +443,36 @@ public class App extends javax.swing.JFrame {
             .addGroup(panelDiscoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel5))
+                    .addComponent(lblTitleDisco)
+                    .addComponent(lblMainDisco))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jProgressBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel31)
-                    .addComponent(jLabel30))
+                .addComponent(pgBarDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel32)
-                    .addComponent(jLabel33)
-                    .addComponent(jLabel10))
+                    .addComponent(lblTextUsoDisco)
+                    .addComponent(lblTextMinimoDisco)
+                    .addComponent(lblMinimoDisco)
+                    .addComponent(lblTextTempoDisco))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel34)
-                    .addComponent(jLabel35))
-                .addContainerGap(64, Short.MAX_VALUE))
+                    .addComponent(lblMaximoDisco)
+                    .addComponent(lblUsoDisco)
+                    .addComponent(lblTempoDisco)
+                    .addComponent(lblTextMaximoDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTextMediaDisco)
+                    .addComponent(lblMediaDisco))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        btnLeitura.setFont(new java.awt.Font("Ubuntu", 0, 48)); // NOI18N
+        btnLeitura.setText("Fazer leitura dos dados");
+        btnLeitura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLeituraActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -387,6 +481,7 @@ public class App extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnLeitura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelDisco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
@@ -406,11 +501,20 @@ public class App extends javax.swing.JFrame {
                     .addComponent(panelMemoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panelDisco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(74, 74, 74))
+                .addGap(18, 18, 18)
+                .addComponent(btnLeitura, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnLeituraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeituraActionPerformed
+        sortearValor(cpu);
+        sortearValor(memoria);
+        sortearValor(disco);
+        atualizarTela();
+    }//GEN-LAST:event_btnLeituraActionPerformed
 
     /**
      * @param args the command line arguments
@@ -440,7 +544,7 @@ public class App extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.  EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new App().setVisible(true);
             }
@@ -448,44 +552,49 @@ public class App extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
-    private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel33;
-    private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel35;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JProgressBar jProgressBar1;
-    private javax.swing.JProgressBar jProgressBar2;
-    private javax.swing.JProgressBar jProgressBar3;
+    private javax.swing.JButton btnLeitura;
+    private javax.swing.JLabel lblMainCPU;
+    private javax.swing.JLabel lblMainDisco;
+    private javax.swing.JLabel lblMainMemoria;
+    private javax.swing.JLabel lblMaximoCPU;
+    private javax.swing.JLabel lblMaximoDisco;
+    private javax.swing.JLabel lblMaximoMemoria;
+    private javax.swing.JLabel lblMediaCPU;
+    private javax.swing.JLabel lblMediaDisco;
+    private javax.swing.JLabel lblMediaMemoria;
+    private javax.swing.JLabel lblMinimoCPU;
+    private javax.swing.JLabel lblMinimoDisco;
+    private javax.swing.JLabel lblMinimoMemoria;
+    private javax.swing.JLabel lblTempoDisco;
+    private javax.swing.JLabel lblTextMaximoCPU;
+    private javax.swing.JLabel lblTextMaximoDisco;
+    private javax.swing.JLabel lblTextMaximoMemoria;
+    private javax.swing.JLabel lblTextMediaCPU;
+    private javax.swing.JLabel lblTextMediaDisco;
+    private javax.swing.JLabel lblTextMediaMemoria;
+    private javax.swing.JLabel lblTextMinimoCPU;
+    private javax.swing.JLabel lblTextMinimoDisco;
+    private javax.swing.JLabel lblTextMinimoMemoria;
+    private javax.swing.JLabel lblTextTempoDisco;
+    private javax.swing.JLabel lblTextUsoDisco;
+    private javax.swing.JLabel lblTextUsoMemoria;
+    private javax.swing.JLabel lblTextUsoPercentCPU;
+    private javax.swing.JLabel lblTextUsoPercentMemoria;
+    private javax.swing.JLabel lblTextVelocidadeCPU;
     private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblTitleCPU;
+    private javax.swing.JLabel lblTitleDisco;
+    private javax.swing.JLabel lblTitleMemoria;
+    private javax.swing.JLabel lblUsoDisco;
+    private javax.swing.JLabel lblUsoMemoria;
+    private javax.swing.JLabel lblUsoPercentCPU;
+    private javax.swing.JLabel lblUsoPercentMemoria;
+    private javax.swing.JLabel lblVelocidadeCPU;
     private javax.swing.JPanel panelCPU;
     private javax.swing.JPanel panelDisco;
     private javax.swing.JPanel panelMemoria;
+    private javax.swing.JProgressBar pgBarCPU;
+    private javax.swing.JProgressBar pgBarDisco;
+    private javax.swing.JProgressBar pgBarMemoria;
     // End of variables declaration//GEN-END:variables
 }

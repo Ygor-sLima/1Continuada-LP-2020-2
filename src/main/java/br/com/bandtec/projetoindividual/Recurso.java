@@ -6,12 +6,12 @@ package br.com.bandtec.projetoindividual;
  */
 public class Recurso {
     //Informação recebida no momento
-    // Ex: em CPU 1.6, em Disco 22ms...
+    // Ex: em CPU 1.6, em Disco 325...
     Double dado;
     //Apenas o dado não serve no nosso sistema, utilizamos também porcentagem
     Double porcentagem;
     //Diferenciar dos outros
-    //Será ou ms, ou GHz, ou GB
+    //Será GHz ou GB
     String medida;
     //Maior valor possível que pode ser lido, em memória no meu caso é 2.0 GB
     //Também é usado para verificar a porcentagem que será calculada.

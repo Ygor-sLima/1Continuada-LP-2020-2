@@ -37,11 +37,12 @@ public class App extends javax.swing.JFrame {
         lblMediaCPU.setText(String.format("%.2f %%",cpu.somaPorcentagem/cpu.leituras));
         
         //Atualizando valores de Disco
-        lblMainDisco.setText(String.format("Atividade %.2f %%", disco.porcentagem));
+        lblMainDisco.setText(String.format("%.2f/%.2f %s (%.2f %%)", disco.dado,
+                disco.maximoPossivel, disco.medida, disco.porcentagem));
         pgBarDisco.setValue(disco.porcentagem.intValue());
         pgBarDisco.setString(String.format("%.2f %% usado",disco.porcentagem));
-        lblUsoDisco.setText(String.format("%.2f %%",disco.porcentagem));
-        lblTempoDisco.setText(String.format("%.2f%s",disco.dado,disco.medida));
+        lblUsoPercentDisco.setText(String.format("%.2f %%",disco.porcentagem));
+        lblUsoDisco.setText(String.format("%.2f%s",disco.dado,disco.medida));
         lblMinimoDisco.setText(String.format("%.2f %%",disco.minimoPorcentagem));
         lblMaximoDisco.setText(String.format("%.2f %%",disco.maximoPorcentagem));
         lblMediaDisco.setText(String.format("%.2f %%",disco.somaPorcentagem/disco.leituras));
@@ -62,15 +63,15 @@ public class App extends javax.swing.JFrame {
      */
     public App() {
         initComponents();
+        //Reparei que se eu definir os valores aqui, assim que a aplicação
+        //iniciar ele irá definir os valores nas variáveis.
+        //e também já fazer o primeiro sorteio.
         cpu.medida = "GHz";
         memoria.medida = "GB";
-        disco.medida = "ms";
+        disco.medida = "GB";
         cpu.maximoPossivel = 3.16;
         memoria.maximoPossivel = 2.0;
-        //Como a porcentagem de atividade de um disco não é medida exatamente
-        //da maneira que to citando aqui, pois pode demorar mais que um tempo
-        //maximo, decidi usar dessa forma para manter de maneira didática
-        disco.maximoPossivel = 22.4;
+        disco.maximoPossivel = 500.0;
         sortearValor(cpu);
         sortearValor(disco);
         sortearValor(memoria);
@@ -119,16 +120,16 @@ public class App extends javax.swing.JFrame {
         lblTitleDisco = new javax.swing.JLabel();
         pgBarDisco = new javax.swing.JProgressBar();
         lblMainDisco = new javax.swing.JLabel();
-        lblTextUsoDisco = new javax.swing.JLabel();
-        lblUsoDisco = new javax.swing.JLabel();
+        lblTextUsoPercentDisco = new javax.swing.JLabel();
+        lblUsoPercentDisco = new javax.swing.JLabel();
         lblMinimoDisco = new javax.swing.JLabel();
         lblTextMinimoDisco = new javax.swing.JLabel();
         lblTextMaximoDisco = new javax.swing.JLabel();
         lblMaximoDisco = new javax.swing.JLabel();
         lblTextMediaDisco = new javax.swing.JLabel();
         lblMediaDisco = new javax.swing.JLabel();
-        lblTextTempoDisco = new javax.swing.JLabel();
-        lblTempoDisco = new javax.swing.JLabel();
+        lblTextUsoDisco = new javax.swing.JLabel();
+        lblUsoDisco = new javax.swing.JLabel();
         btnLeitura = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -372,10 +373,10 @@ public class App extends javax.swing.JFrame {
 
         lblMainDisco.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
-        lblTextUsoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        lblTextUsoDisco.setText("Atividade:");
+        lblTextUsoPercentDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextUsoPercentDisco.setText("Uso (%)");
 
-        lblUsoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblUsoPercentDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         lblMinimoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
@@ -392,10 +393,10 @@ public class App extends javax.swing.JFrame {
 
         lblMediaDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        lblTextTempoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        lblTextTempoDisco.setText("Tempo de resposta");
+        lblTextUsoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblTextUsoDisco.setText("Uso (GB)");
 
-        lblTempoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblUsoDisco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         javax.swing.GroupLayout panelDiscoLayout = new javax.swing.GroupLayout(panelDisco);
         panelDisco.setLayout(panelDiscoLayout);
@@ -411,16 +412,16 @@ public class App extends javax.swing.JFrame {
                         .addComponent(lblMainDisco))
                     .addGroup(panelDiscoLayout.createSequentialGroup()
                         .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblTextUsoDisco)
+                            .addComponent(lblTextUsoPercentDisco)
                             .addGroup(panelDiscoLayout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(lblUsoDisco)))
+                                .addComponent(lblUsoPercentDisco)))
                         .addGap(18, 18, 18)
                         .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelDiscoLayout.createSequentialGroup()
                                 .addGap(12, 12, 12)
-                                .addComponent(lblTempoDisco))
-                            .addComponent(lblTextTempoDisco))
+                                .addComponent(lblUsoDisco))
+                            .addComponent(lblTextUsoDisco))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -449,18 +450,19 @@ public class App extends javax.swing.JFrame {
                 .addComponent(pgBarDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTextUsoDisco)
+                    .addComponent(lblTextUsoPercentDisco)
                     .addComponent(lblTextMinimoDisco)
                     .addComponent(lblMinimoDisco)
-                    .addComponent(lblTextTempoDisco))
+                    .addComponent(lblTextUsoDisco))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblMaximoDisco)
-                    .addComponent(lblUsoDisco)
-                    .addComponent(lblTempoDisco)
-                    .addComponent(lblTextMaximoDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTextMaximoDisco, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblMaximoDisco)
+                        .addComponent(lblUsoPercentDisco)
+                        .addComponent(lblUsoDisco)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelDiscoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblTextMediaDisco)
                     .addComponent(lblMediaDisco))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -565,7 +567,6 @@ public class App extends javax.swing.JFrame {
     private javax.swing.JLabel lblMinimoCPU;
     private javax.swing.JLabel lblMinimoDisco;
     private javax.swing.JLabel lblMinimoMemoria;
-    private javax.swing.JLabel lblTempoDisco;
     private javax.swing.JLabel lblTextMaximoCPU;
     private javax.swing.JLabel lblTextMaximoDisco;
     private javax.swing.JLabel lblTextMaximoMemoria;
@@ -575,10 +576,10 @@ public class App extends javax.swing.JFrame {
     private javax.swing.JLabel lblTextMinimoCPU;
     private javax.swing.JLabel lblTextMinimoDisco;
     private javax.swing.JLabel lblTextMinimoMemoria;
-    private javax.swing.JLabel lblTextTempoDisco;
     private javax.swing.JLabel lblTextUsoDisco;
     private javax.swing.JLabel lblTextUsoMemoria;
     private javax.swing.JLabel lblTextUsoPercentCPU;
+    private javax.swing.JLabel lblTextUsoPercentDisco;
     private javax.swing.JLabel lblTextUsoPercentMemoria;
     private javax.swing.JLabel lblTextVelocidadeCPU;
     private javax.swing.JLabel lblTitle;
@@ -588,6 +589,7 @@ public class App extends javax.swing.JFrame {
     private javax.swing.JLabel lblUsoDisco;
     private javax.swing.JLabel lblUsoMemoria;
     private javax.swing.JLabel lblUsoPercentCPU;
+    private javax.swing.JLabel lblUsoPercentDisco;
     private javax.swing.JLabel lblUsoPercentMemoria;
     private javax.swing.JLabel lblVelocidadeCPU;
     private javax.swing.JPanel panelCPU;
